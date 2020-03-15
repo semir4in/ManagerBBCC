@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-
+using MahApps.Metro.Controls.Dialogs;
 using ManagerBBCC.Main.ExtendedMethods;
 
 namespace ManagerBBCC.Main.Windows
@@ -33,7 +33,8 @@ namespace ManagerBBCC.Main.Windows
 #else
             this.VersionBlock.Text = $"ManagerBBCC v{Config.VersionShortString}";
 #endif
-            this.EntryDataGrid.ItemsSource = Core.Meta.Entries;
+            //this.EntryDataGrid.ItemsSource = Core.Meta.Entries;
+            this.EntryListView.ItemsSource = Core.Meta.Filtered;
         }
 
         private bool _isInitialProgress = true;

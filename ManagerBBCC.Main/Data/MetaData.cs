@@ -7,20 +7,27 @@ using System;
 
 namespace ManagerBBCC.Main.Data
 {
-    public class MetaData : JsonFunction
+    public class MetaData : JsonFunctionBase
     {
         public MetaData()
         {
             this.Entries = new List<Entry>();
 
-            this.Active = new List<Entry>();
+            this.Filtered = new List<Entry>();
             this.TagPool = new List<TagFilter>();
+
+            this.SelectedEntryIDs = new List<int>();
+            this.NextID = 0;
         }
 
         public List<Entry> Entries { get; set; }
 
-        public List<Entry> Active { get; set; }
+        public List<Entry> Filtered { get; set; }
         public List<TagFilter> TagPool { get; set; }
+
+
+        public List<int> SelectedEntryIDs { get; set; }
+        public int NextID { get; set; }
 
         public void CheckPoolCount()
         {
@@ -70,32 +77,29 @@ namespace ManagerBBCC.Main.Data
             }
         }
 
-        public string JavaScriptString
+        public string GetJavaScript(bool validOnly)
         {
-            get
-            {
-                var sorted = this.Entries
-                    .OrderBy(x => x.Order)
-                    .ThenBy(x => x.Name)
-                    .ToList()
-                    .ConvertAll(x => x.JavaScriptString);
+            var sorted = this.Entries
+                .Where(x => !validOnly || x.IsValid)
+                .OrderBy(x => x.Order)
+                .ThenBy(x => x.Name)
+                .ToList()
+                .ConvertAll(x => x.JavaScriptString);
 
-                return $"dcConsData = [\n\t{string.Join(",\n\t", sorted)}\n];";
-            }
+            return $"dcConsData = [\n\t{string.Join(",\n\t", sorted)}\n];";
         }
 
-        public string JsonString
+        public string GetJson(bool validOnly)
         {
-            get
-            {
-                var sorted = this.Entries
-                    .OrderBy(x => x.Order)
-                    .ThenBy(x => x.Name)
-                    .ToList()
-                    .ConvertAll(x => x.JSONString);
+            var sorted = this.Entries
+                .Where(x => !validOnly || x.IsValid)
+                .OrderBy(x => x.Order)
+                .ThenBy(x => x.Name)
+                .ToList()
+                .ConvertAll(x => x.JSONString);
 
-                return $"{{\n\t\"dccons\": [\n\t\t{string.Join(",\n\t\t", sorted)}\n\t]\n}}";
-            }
+            return $"{{\n\t\"dccons\": [\n\t\t{string.Join(",\n\t\t", sorted)}\n\t]\n}}";
         }
+
     }
 }

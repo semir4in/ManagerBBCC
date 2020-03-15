@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ManagerBBCC.Main.Functions
 {
-    public class JsonFunction
+    public class JsonFunctionBase
     {
         public JObject ToJson()
         {

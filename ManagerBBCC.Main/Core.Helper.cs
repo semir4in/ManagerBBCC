@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-
+using System.Windows.Input;
+using System.Windows.Threading;
 using ManagerBBCC.Main.Classes;
+using ManagerBBCC.Main.Controls;
 using ManagerBBCC.Main.Data;
 
 namespace ManagerBBCC.Main
@@ -33,7 +35,10 @@ namespace ManagerBBCC.Main
 
         public static void BeginInitialization()
         {
-            Core.InitialWorker = new BackgroundWorker();
+            Core.InitialWorker = new BackgroundWorker()
+            {
+                WorkerReportsProgress = true,
+            };
             Core.InitialWorker.DoWork += InitialWorker_DoWork;
             Core.InitialWorker.RunWorkerAsync();
         }
@@ -47,55 +52,61 @@ namespace ManagerBBCC.Main
             });
             Thread.Sleep(Config.ThreadLongSleepTimeout);
 
-            // Check
+            Core.Invoke(delegate
+            {
+                Core.MainWindow.InitialStatus = "설정 불러오기...";
+            });
+            Thread.Sleep(Config.ThreadSleepTimeout);
             Core.CheckSetting();
 
 
-            if (Core.IsBBCCFolderValid)
+            Core.Invoke(delegate
             {
-                Core.Invoke(delegate
+                Core.MainWindow.InitialStatus = "엔트리 불러오기...";
+            });
+            Thread.Sleep(Config.ThreadSleepTimeout);
+            if (Core.CheckEntries())
+            {
+                Core.MainWindow.Dispatcher.Invoke(new Action(delegate
                 {
-                    Core.MainWindow.InitialStatus = "BBCC 데이터 불러오기...";
-                });
+                    Core.CheckTagPoolFromEntry();
+                    Core.DisplayTags();
+                    Core.DisplayEntries();
+                }), DispatcherPriority.Background);
                 Thread.Sleep(Config.ThreadSleepTimeout);
 
                 Core.Invoke(delegate
                 {
-                    Core.ImportEntryFromImage();
-                    Core.ImportEntryFromProperty();
-                    Core.CheckTagPoolFromEntry();
-
-                    Core.DisplayEntries();
-                    Core.DisplayTags();
+                    Core.MainWindow.InitialStatus = "엔트리 동기화...";
                 });
-
+                Thread.Sleep(Config.ThreadSleepTimeout);
+                Core.SyncEntries();
             }
+
+            //Core.MainWindow.Dispatcher.Invoke(new Action(delegate
+            //{
+
+            //}), System.Windows.Threading.DispatcherPriority.Normal);
 
             Core.Invoke(delegate
             {
-                Core.MainWindow.Show();
                 Core.MainWindow.InitialStatus = "UI 확인...";
             });
             Thread.Sleep(Config.ThreadSleepTimeout);
-
             Core.Invoke(delegate
             {
                 Core.CheckControls();
             });
-
-
+            Thread.Sleep(Config.ThreadSleepTimeout);
 
             Core.Invoke(delegate
             {
                 Core.MainWindow.InitialStatus = "준비!";
             });
             Thread.Sleep(Config.ThreadLongSleepTimeout);
-
             Core.Invoke(delegate
             {
                 Core.MainWindow.IsInitialProgress = false;
-
-                
 #if DEBUG
                 if (Core.Setting.OpenDebug)
                 {
@@ -103,7 +114,6 @@ namespace ManagerBBCC.Main
                 }
 #endif
             });
-            
 
             Core.InitialWorker.Dispose();
         }
@@ -140,6 +150,24 @@ namespace ManagerBBCC.Main
             Core.WriteWorker.Dispose();
         }
 
-        public static void Invoke(Action callback) => Application.Current.Dispatcher.Invoke(callback);
+
+        public static int PushID()
+        {
+            return Core.Meta.NextID++;
+        }
+        public static void Invoke(Action callback) => Application.Current.Dispatcher.Invoke(callback, System.Windows.Threading.DispatcherPriority.Send);
+    
+        public static bool IsShiftKeyDown => Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+        public static List<Entry> SelectedEntries
+        {
+            get
+            {
+                List<Entry> output = new List<Entry>();
+
+                output.AddRange(Core.MainWindow.EntryListView.SelectedItems.Cast<Entry>());
+                
+                return output;
+            }
+        }
     }
 }

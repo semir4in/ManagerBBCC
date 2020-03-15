@@ -1,17 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-
+using ManagerBBCC.Main.Functions;
 using Newtonsoft.Json;
 
 namespace ManagerBBCC.Main.Classes
 {
-    public class Entry
+    public class Entry : JsonFunctionBase
     {
         public Entry()
         {
+            this.ID = -1;
+            this.Order = -1;
+
             this.Keywords = new List<string>();
             this.Tags = new List<string>();
+
+            this.LocalPath = "";
         }
 
         public int ID { get; set; }
@@ -19,8 +24,12 @@ namespace ManagerBBCC.Main.Classes
         public string Name { get; set; }
         public List<string> Keywords { get; set; }
         public List<string> Tags { get; set; }
+        public string Url { get; set; }
         public string LocalPath { get; set; }
 
+
+        [JsonIgnore]
+        public string EntryString => this.Serialize();
         [JsonIgnore]
         public string JoinedKeyword => string.Join(", ", this.Keywords);
         [JsonIgnore]
@@ -46,7 +55,7 @@ namespace ManagerBBCC.Main.Classes
                 return output;
             }
         }
-
+        [JsonIgnore]
         public string JavaScriptString
         {
             get
@@ -56,22 +65,47 @@ namespace ManagerBBCC.Main.Classes
                    + $", {Config.JsTagKey}: [{this.JoinedStringProperty(this.Tags)}] }}";
             }
         }
-
+        [JsonIgnore]
         public string JSONString
         {
             get
             {
-                string onlinePath = string.Format(Config.ImagePathSeed,
+                if (Core.Setting.GithubSaved)
+                {
+                    string onlinePath = string.Format(Config.ImagePathSeed,
                     Core.Setting.GithubUserName,
                     Core.Setting.GithubRepositoryName,
                     this.Name);
 
-                return $"{{ \"{Config.JsKeywordKey}\": [{this.JoinedStringProperty(this.Keywords)}]"
-                   + $", \"{Config.JsTagKey}\": [{this.JoinedStringProperty(this.Tags)}]"
-                   + $", \"{Config.JSONPathKey}\": \"{onlinePath}\" }}";
+                    return $"{{ " + $"\"{Config.JsKeywordKey}\": [{this.JoinedStringProperty(this.Keywords)}]"
+                         + $", " + $"\"{Config.JsTagKey}\": [{this.JoinedStringProperty(this.Tags)}]"
+                         + $", " + $"\"{Config.JsonPathKey}\": \"{onlinePath}\""
+                         + $" }}";
+                }
+                else
+                {
+                    return $"{{ " + $"\"{Config.JsKeywordKey}\": [{this.JoinedStringProperty(this.Keywords)}]"
+                         + $", " + $"\"{Config.JsTagKey}\": [{this.JoinedStringProperty(this.Tags)}]"
+                         + $" }}";
+                }
             }
         }
+        [JsonIgnore]
+        public bool IsValid
+        {
+            get
+            {
+                bool output = true;
 
+                if (this.ID < 0) output = false;
+                if (this.Name.Length == 0) output = false;
+                if (this.Keywords.Count == 0) output = false;
+                if (this.Tags.Count == 0) output = false;
+                if (!File.Exists(this.LocalPath)) output = false;
+
+                return output;
+            }
+        }
         private string JoinedStringProperty(List<string> list)
         {
             return string.Join(", ", list.ConvertAll(x => $"\"{x}\""));

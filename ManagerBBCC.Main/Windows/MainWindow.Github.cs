@@ -10,6 +10,40 @@ namespace ManagerBBCC.Main.Windows
 {
     public partial class MainWindow
     {
+        private void SetGithubButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.GithubFlyout.IsOpen = !this.GithubFlyout.IsOpen;
+
+            if (this.GithubFlyout.IsOpen)
+            {
+                this.GithubUserNameBox.Text = Core.Setting.GithubUserName;
+                this.GithubRepositoryNameBox.Text = Core.Setting.GithubRepositoryName;
+
+                if (Core.Setting.GithubSaved)
+                {
+                    this.GithubUserNameBox.IsEnabled = false;
+                    this.GithubRepositoryNameBox.IsEnabled = false;
+                    this.GithubResultBlock.Text = "저장 완료";
+
+                    this.CancelGithubButton.IsEnabled = true;
+                    this.TestGithubButton.IsEnabled = false;
+                    this.SaveGithubButton.IsEnabled = false;
+                    this.VisitGithubButton.IsEnabled = true;
+                }
+                else
+                {
+                    this.GithubUserNameBox.IsEnabled = true;
+                    this.GithubRepositoryNameBox.IsEnabled = true;
+                    this.GithubResultBlock.Text = "연결 안됨";
+
+                    this.CancelGithubButton.IsEnabled = false;
+                    this.TestGithubButton.IsEnabled = true;
+                    this.SaveGithubButton.IsEnabled = false;
+                    this.VisitGithubButton.IsEnabled = false;
+                }
+            }
+        }
+
         #region [ Flyout -> GithubFlyout ]
 
         private void CancelGithubButton_Click(object sender, RoutedEventArgs e)
@@ -23,7 +57,7 @@ namespace ManagerBBCC.Main.Windows
             this.SaveGithubButton.IsEnabled = false;
             this.VisitGithubButton.IsEnabled = false;
 
-            this.GithubStatusBlock.Text = $"깃허브: 연결안됨";
+            this.GithubStatusBlock.Text = $"깃허브: 연결 안됨";
 
             Core.Setting.GithubSaved = false;
         }
@@ -40,9 +74,9 @@ namespace ManagerBBCC.Main.Windows
                 githubClient = new GitHubClient(new ProductHeaderValue(userName));
                 repository = githubClient.Repository.Get(userName, repositoryName).Result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Media.SystemSounds.Beep.Play();
+                Core.BeepSound();
                 this.GithubResultBlock.Text = "깃허브 저장소 확인 실패";
                 return;
             }
@@ -53,9 +87,9 @@ namespace ManagerBBCC.Main.Windows
                 List<RepositoryContent> imageContents = githubClient.Repository.Content.GetAllContents(userName, repositoryName, imagePathSplit.First()).Result.ToList();
                 RepositoryContent dcconContent = imageContents.Find(x => x.Name == imagePathSplit.Last() && x.Type == "dir");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Media.SystemSounds.Beep.Play();
+                Core.BeepSound();
                 this.GithubResultBlock.Text = "깃허브 이미지 저장경로 확인 실패";
                 return;
             }
@@ -65,9 +99,9 @@ namespace ManagerBBCC.Main.Windows
                 List<RepositoryContent> libraryContents = githubClient.Repository.Content.GetAllContents(userName, repositoryName, Config.DataFolderSubPath).Result.ToList();
                 RepositoryContent listContent = libraryContents.Find(x => x.Name == Config.JavaScriptFileName && x.Type == "file");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Media.SystemSounds.Beep.Play();
+                Core.BeepSound();
                 this.GithubResultBlock.Text = "깃허브 데이터 저장경로 확인 실패";
                 return;
             }
@@ -86,8 +120,6 @@ namespace ManagerBBCC.Main.Windows
         {
             string userName = this.GithubUserNameBox.Text;
             string repositoryName = this.GithubRepositoryNameBox.Text;
-
-            string bbccUrl = $"https://github.com/{userName}/{repositoryName}";
 
             this.GithubResultBlock.Text = "저장 완료";
 
@@ -109,8 +141,6 @@ namespace ManagerBBCC.Main.Windows
 
             Process.Start($"https://github.com/{userName}/{repositoryName}");
         }
-
-
 
         #endregion
     }

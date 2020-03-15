@@ -14,8 +14,8 @@ namespace ManagerBBCC.Main
 {
     public static class Config
     {
-        public const int ThreadSleepTimeout = 200;
-        public const int ThreadLongSleepTimeout = 800;
+        public const int ThreadSleepTimeout = 50;
+        public const int ThreadLongSleepTimeout = 500;
 
         // Assembly
         public static readonly string ProjectName = Assembly.GetEntryAssembly().GetName().Name;
@@ -45,7 +45,10 @@ namespace ManagerBBCC.Main
         public const string JsKeywordKey = "keywords";
         public const string JsTagKey = "tags";
 
-        public const string JSONPathKey = "path";
+        public const string JsonPathKey = "path";
+        public const string JsonHeaderKey = "dccons";
+        public const string JsonKeywordKey = "keywords";
+        public const string JsonTagKey = "tags";
 
         public static string ImagePathSeed
         {
@@ -82,6 +85,7 @@ namespace ManagerBBCC.Main
         };
 
         public const string DiscordUrl = "https://discord.gg/T9sg3yX";
+        public const string GithubProjectUrl = "https://github.com/semir4in/ManagerBBCC";
 
         public static readonly string Title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
         public const int VersionMajorNumber = 0;

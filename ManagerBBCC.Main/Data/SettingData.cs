@@ -10,11 +10,20 @@ using System.Threading.Tasks;
 
 namespace ManagerBBCC.Main.Data
 {
-    public class SettingData : JsonFunction
+    public class SettingData : JsonFunctionBase
     {
-        public SettingData()
-        {
 
+        private bool _doOpenWarning = true;
+        public bool DoOpenWarning
+        {
+            get => this._doOpenWarning;
+            set
+            {
+                if (this._doOpenWarning == value) return;
+
+                this._doOpenWarning = value;
+                this.Save();
+            }
         }
 
         private string _bbccPath = "";
@@ -119,6 +128,7 @@ namespace ManagerBBCC.Main.Data
 
             return settingData;
         }
+
         public void Save()
         {
             this.Save(Config.SettingFilePath);

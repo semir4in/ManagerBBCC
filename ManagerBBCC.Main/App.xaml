@@ -14,6 +14,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
+
+            <Color x:Key="AccentBaseColor">#FFD80073</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

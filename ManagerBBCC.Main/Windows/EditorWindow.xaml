@@ -1,0 +1,82 @@
+﻿<windows:BaseWindow x:Class="ManagerBBCC.Main.Windows.EditorWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    
+                    xmlns:windows="clr-namespace:ManagerBBCC.Main.Windows"
+                    xmlns:controls="clr-namespace:ManagerBBCC.Main.Controls"
+                    
+                    Title="BBCC 편집기"
+                    TitlebarHeight="0"
+                    ShowTitleBar="False"
+                    WindowStyle="None"
+                    ResizeMode="NoResize"
+                    ShowInTaskbar="False"
+
+                    Height="178" Width="500">
+
+    <windows:BaseWindow.Resources>
+        <Thickness x:Key="ContainerGap">10</Thickness>
+        <Thickness x:Key="ControlGap">4</Thickness>
+        <sys:Int32 x:Key="SpanAll">2147483647</sys:Int32>
+    </windows:BaseWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{StaticResource AccentColorBrush}">
+            <TextBlock x:Name="EditorHeaderBlock"
+                       Text="편집" FontSize="14"
+                       FontWeight="DemiBold"
+                       Margin="{StaticResource ContainerGap}"
+                       HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid Margin="{StaticResource ContainerGap}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="키워드"
+                       Margin="{StaticResource ControlGap}"
+                       VerticalAlignment="Center"/>
+                <TextBox x:Name="EditorKeywordBox" Grid.Row="0" Grid.Column="1"
+                     Margin="{StaticResource ControlGap}"
+                     VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="태그"
+                       Margin="{StaticResource ControlGap}"
+                       VerticalAlignment="Center"/>
+                <TextBox x:Name="EditorTagBox" Grid.Row="1" Grid.Column="1"
+                     Margin="{StaticResource ControlGap}"
+                     VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal"
+                        Margin="10,0,10,10"
+                        HorizontalAlignment="Right">
+                <controls:MetroButton x:Name="EditorApplyButton"
+                                  Text="변경" IsAccented="True"
+                                  FontSize="12" FontWeight="Normal"
+                                  Padding="4,2" Margin="{StaticResource ControlGap}"
+                                  Click="EditorApplyButton_Click"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</windows:BaseWindow>

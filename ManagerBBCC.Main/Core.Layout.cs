@@ -13,5 +13,8 @@ namespace ManagerBBCC.Main
     {
         private static MainWindow _mainWindow;
         public static MainWindow MainWindow => Core._mainWindow ?? (Core._mainWindow = new MainWindow());
+
+        private static EditorWindow _editorWindow;
+        public static EditorWindow EditorWindow => Core._editorWindow ?? (Core._editorWindow = new EditorWindow());
     }
 }

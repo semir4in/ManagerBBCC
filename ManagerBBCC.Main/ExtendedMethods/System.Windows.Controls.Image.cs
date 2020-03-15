@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using WpfAnimatedGif;
 
 namespace ManagerBBCC.Main.ExtendedMethods
 {
@@ -12,7 +14,7 @@ namespace ManagerBBCC.Main.ExtendedMethods
             {
                 using (MemoryStream streamToken = new MemoryStream())
                 {
-                    bitmap.Save(streamToken, System.Drawing.Imaging.ImageFormat.Png);
+                    bitmap.Save(streamToken, bitmap.RawFormat);
                     streamToken.Position = 0;
 
                     BitmapImage bitmapImageToken = new BitmapImage();
@@ -21,9 +23,32 @@ namespace ManagerBBCC.Main.ExtendedMethods
                     bitmapImageToken.StreamSource = streamToken;
                     bitmapImageToken.EndInit();
 
-                    image.Source = bitmapImageToken;
+                    //ImageBehavior.SetAnimatedSource(image, bitmapImageToken); // for WpfAnimatedGif package
+                    image.Source = bitmapImageToken; // Generally
                     bitmapImageToken.Freeze();
                 }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool SetBitmap(this Image image, string path)
+        {
+            try
+            {
+                BitmapImage bitmapImageToken = new BitmapImage();
+                bitmapImageToken.BeginInit();
+                bitmapImageToken.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImageToken.UriSource = new Uri(path);
+                bitmapImageToken.EndInit();
+
+                ImageBehavior.SetAnimatedSource(image, bitmapImageToken); // for WpfAnimatedGif package
+                //image.Source = bitmapImageToken; // Generally
+                bitmapImageToken.Freeze();
             }
             catch
             {
