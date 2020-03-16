@@ -54,7 +54,7 @@ namespace ManagerBBCC.Main.Controls
             }
             else
             {
-                this.KeywordBlock.Text = $"#키워드_없음_{this.Entry.ID}";
+                this.KeywordBlock.Text = $"키워드없음{this.Entry.ID}";
             }
 
             // Col #1
@@ -78,7 +78,7 @@ namespace ManagerBBCC.Main.Controls
             }
             else
             {
-                this.TagBlock.Text = $"#태그_없음_{this.Entry.ID}";
+                this.TagBlock.Text = "태그없음";
             }
 
             // Context menu
@@ -90,11 +90,6 @@ namespace ManagerBBCC.Main.Controls
             Core.LastEntry = this.Entry;
             Core.EditorWindow.FromEntry(Core.LastEntry, Core.SelectedEntries);
             Core.EditorWindow.Popup();
-        }
-
-        private void EditorApplyButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void RemoveEntryMenuItem_Click(object sender, RoutedEventArgs e)

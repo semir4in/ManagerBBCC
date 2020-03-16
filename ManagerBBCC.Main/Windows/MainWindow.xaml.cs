@@ -110,9 +110,12 @@ namespace ManagerBBCC.Main.Windows
 
         private void TagListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            List<TagFilter> selected = this.TagListView.SelectedItems.Cast<TagFilter>().ToList();
+            
+            Core.Meta.Filtered.Clear();
+            if (selected.Count > 0)
             {
-                foreach (TagFilter added in e.AddedItems)
+                foreach (TagFilter added in selected)
                 {
                     if (added.Tag == Config.NoTag)
                     {
@@ -123,31 +126,10 @@ namespace ManagerBBCC.Main.Windows
                         Core.Meta.Filtered.AddRange(Core.Meta.Entries.FindAll(x => x.Tags.Contains(added.Tag)));
                     }
                 }
-            }
 
-            if (e.RemovedItems.Count > 0)
-            {
-                foreach (TagFilter removed in e.RemovedItems)
+                if (selected.Count == 1)
                 {
-                    if (removed.Tag == Config.NoTag)
-                    {
-                        Core.Meta.Entries.FindAll(x => x.Tags.Count == 0)
-                            .ForEach(x => Core.Meta.Filtered.Remove(x));
-                    }
-                    else
-                    {
-                        Core.Meta.Entries.FindAll(x => x.Tags.Contains(removed.Tag))
-                            .ForEach(x => Core.Meta.Filtered.Remove(x));
-                    }
-                }
-            }
-
-            var items = (sender as ListView).SelectedItems;
-            if (items.Count > 0)
-            {
-                if (items.Count == 1)
-                {
-                    TagFilter filter = items[0] as TagFilter;
+                    TagFilter filter = selected[0] as TagFilter;
                     this.EditSelectedTagButton.IsEnabled = (filter.Tag != Config.NoTag);
                     this.DeleteSelectedTagButton.IsEnabled = (filter.Tag != Config.NoTag);
                 }
@@ -166,6 +148,14 @@ namespace ManagerBBCC.Main.Windows
             }
 
             Core.DisplayEntries();
+        }
+
+        private void TagListView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.TagListView.SelectedIndex = -1;
+            }
         }
 
         private void EditTagMenuItem_Click(object sender, RoutedEventArgs e)
@@ -495,5 +485,6 @@ namespace ManagerBBCC.Main.Windows
                 Core.LastEntry = null;
             }
         }
+
     }
 }

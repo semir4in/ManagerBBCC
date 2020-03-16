@@ -226,7 +226,8 @@
                                           BorderThickness="0"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                           PreviewMouseWheel="TagListView_PreviewMouseWheel"
-                                          SelectionChanged="TagListView_SelectionChanged">
+                                          SelectionChanged="TagListView_SelectionChanged"
+                                          PreviewKeyDown="TagListView_PreviewKeyDown">
 
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
