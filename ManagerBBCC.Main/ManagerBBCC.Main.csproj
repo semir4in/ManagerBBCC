@@ -197,7 +197,8 @@
     <Compile Include="Core.Helper.cs" />
     <Compile Include="Core.Layout.cs" />
     <Compile Include="Classes\Entry.cs" />
-    <Compile Include="Core.Variable.cs" />
+    <Compile Include="Core.Worker.cs" />
+    <Compile Include="ExtendedMethods\System.Collections.Generic.List.cs" />
     <Compile Include="ExtendedMethods\System.Windows.Controls.Image.cs" />
     <Compile Include="Functions\FileCheck.cs" />
     <Compile Include="Functions\JsonFunctionBase.cs" />

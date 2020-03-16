@@ -100,7 +100,6 @@ namespace ManagerBBCC.Main.Classes
                 if (this.ID < 0) output = false;
                 if (this.Name.Length == 0) output = false;
                 if (this.Keywords.Count == 0) output = false;
-                if (this.Tags.Count == 0) output = false;
                 if (!File.Exists(this.LocalPath)) output = false;
 
                 return output;

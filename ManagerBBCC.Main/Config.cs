@@ -84,6 +84,7 @@ namespace ManagerBBCC.Main
             }
         };
 
+        public const string InstructionURL = "";
         public const string DiscordUrl = "https://discord.gg/T9sg3yX";
         public const string GithubProjectUrl = "https://github.com/semir4in/ManagerBBCC";
 

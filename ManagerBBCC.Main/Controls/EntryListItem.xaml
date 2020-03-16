@@ -44,7 +44,8 @@
                 </MenuItem.Header>
             </MenuItem>
 
-            <MenuItem Click="EditEntryMenuItem_Click">
+            <MenuItem ToolTip="편집 단축키: F2" 
+                      Click="EditEntryMenuItem_Click">
                 <MenuItem.Icon>
                     <iconPacks:PackIconMaterialDesign Kind="Edit" Height="18" Width="18" Margin="10,4,2,4"/>
                 </MenuItem.Icon>

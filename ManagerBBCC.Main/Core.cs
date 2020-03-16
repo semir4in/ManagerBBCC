@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
+using ManagerBBCC.Main.Data;
 using ManagerBBCC.Main.Functions;
 
 namespace ManagerBBCC.Main
@@ -17,24 +17,10 @@ namespace ManagerBBCC.Main
 
         public static void Reset()
         {
-            if (File.Exists(Config.SettingFilePath))
-            {
-                if (FileCheck.IsAvailable(Config.SettingFilePath))
-                {
-                    File.Delete(Config.SettingFilePath);
+            (Core._setting = new SettingData()).Save();
 
-                    Process.Start(Application.ResourceAssembly.Location);
-                    Environment.Exit(0);
-                }
-                else
-                {
-
-                }
-            }
-            else
-            {
-
-            }
+            Process.Start(Application.ResourceAssembly.Location);
+            Environment.Exit(0);
         }
         public static void Save()
         {

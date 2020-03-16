@@ -87,9 +87,8 @@ namespace ManagerBBCC.Main.Controls
 
         private void EditEntryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            List<Entry> selected = Core.SelectedEntries;
-
-            Core.EditorWindow.FromEntry(this.Entry, selected);
+            Core.LastEntry = this.Entry;
+            Core.EditorWindow.FromEntry(Core.LastEntry, Core.SelectedEntries);
             Core.EditorWindow.Popup();
         }
 

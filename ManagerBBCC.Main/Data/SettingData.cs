@@ -13,21 +13,21 @@ namespace ManagerBBCC.Main.Data
     public class SettingData : JsonFunctionBase
     {
 
-        private bool _doOpenWarning = true;
-        public bool DoOpenWarning
+        private bool _doLoadBbccWarning = true;
+        public bool DoLoadBbccWarning
         {
-            get => this._doOpenWarning;
+            get => this._doLoadBbccWarning;
             set
             {
-                if (this._doOpenWarning == value) return;
+                if (this._doLoadBbccWarning == value) return;
 
-                this._doOpenWarning = value;
+                this._doLoadBbccWarning = value;
                 this.Save();
             }
         }
 
         private string _bbccPath = "";
-        public string BBCCPath
+        public string BbccPath
         {
             get => this._bbccPath;
             set
@@ -78,18 +78,20 @@ namespace ManagerBBCC.Main.Data
             }
         }
 
-        private bool _openDebug = false;
-        public bool OpenDebug
+#if DEBUG
+        private bool _openDebugWhenStartup = true;
+        public bool OpenDebugWhenStartup
         {
-            get => this._openDebug;
+            get => this._openDebugWhenStartup;
             set
             {
-                if (this._openDebug == value) return;
+                if (this._openDebugWhenStartup == value) return;
 
-                this._openDebug = value;
+                this._openDebugWhenStartup = value;
                 this.Save();
             }
         }
+#endif
 
         public static SettingData Load()
         {

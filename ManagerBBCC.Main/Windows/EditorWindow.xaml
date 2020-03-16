@@ -13,7 +13,9 @@
                     ResizeMode="NoResize"
                     ShowInTaskbar="False"
 
-                    Height="178" Width="500">
+                    Height="210" Width="500"
+                    
+                    PreviewKeyDown="BaseWindow_PreviewKeyDown">
 
     <windows:BaseWindow.Resources>
         <Thickness x:Key="ContainerGap">10</Thickness>
@@ -41,6 +43,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -49,18 +52,26 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="이름"
+                       Margin="{StaticResource ControlGap}"
+                       VerticalAlignment="Center"/>
+                <TextBox x:Name="EditorNameBox" Grid.Row="0" Grid.Column="1"
+                     Margin="{StaticResource ControlGap}"
+                     VerticalAlignment="Center"/>
+                
+                <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="키워드"
                        Margin="{StaticResource ControlGap}"
                        VerticalAlignment="Center"/>
-                <TextBox x:Name="EditorKeywordBox" Grid.Row="0" Grid.Column="1"
+                <TextBox x:Name="EditorKeywordBox" Grid.Row="1" Grid.Column="1"
                      Margin="{StaticResource ControlGap}"
                      VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0"
+                <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="태그"
                        Margin="{StaticResource ControlGap}"
                        VerticalAlignment="Center"/>
-                <TextBox x:Name="EditorTagBox" Grid.Row="1" Grid.Column="1"
+                <TextBox x:Name="EditorTagBox" Grid.Row="2" Grid.Column="1"
                      Margin="{StaticResource ControlGap}"
                      VerticalAlignment="Center"/>
             </Grid>
@@ -70,11 +81,20 @@
             <StackPanel Orientation="Horizontal"
                         Margin="10,0,10,10"
                         HorizontalAlignment="Right">
+
+                <controls:MetroButton x:Name="EditorRestoreButton"
+                                      Text="되돌리기" IsAccented="False"
+                                      FontSize="12" FontWeight="Normal"
+                                      Padding="4,2" Margin="{StaticResource ControlGap}"
+                                      VerticalAlignment="Center"
+                                      Click="EditorRestoreButton_Click"/>
+                
                 <controls:MetroButton x:Name="EditorApplyButton"
-                                  Text="변경" IsAccented="True"
-                                  FontSize="12" FontWeight="Normal"
-                                  Padding="4,2" Margin="{StaticResource ControlGap}"
-                                  Click="EditorApplyButton_Click"/>
+                                      Text="변경" IsAccented="True"
+                                      FontSize="12" FontWeight="Normal"
+                                      Padding="4,2" Margin="{StaticResource ControlGap}"
+                                      VerticalAlignment="Center"
+                                      Click="EditorApplyButton_Click"/>
             </StackPanel>
         </Grid>
 

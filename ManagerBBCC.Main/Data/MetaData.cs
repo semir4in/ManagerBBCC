@@ -29,7 +29,31 @@ namespace ManagerBBCC.Main.Data
         public List<int> SelectedEntryIDs { get; set; }
         public int NextID { get; set; }
 
-        public void CheckPoolCount()
+        public void Reset()
+        {
+            this.Entries.Clear();
+            this.Filtered.Clear();
+            this.TagPool.Clear();
+            this.SelectedEntryIDs.Clear();
+        }
+
+        public void Update(List<Entry> news)
+        {
+            foreach (Entry tokenEntry in news)
+            {
+                int matchedIndex = this.Entries.FindIndex(x => x.ID == tokenEntry.ID);
+                if (matchedIndex > -1)
+                {
+                    this.Entries[matchedIndex] = tokenEntry;
+                }
+                else
+                {
+                    this.Entries.Add(tokenEntry);
+                }
+            }
+        }
+
+        public void CheckTagPool()
         {
             this.TagPool.Clear();
 

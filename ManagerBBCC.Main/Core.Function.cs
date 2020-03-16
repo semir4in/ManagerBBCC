@@ -7,9 +7,9 @@ using System.Windows;
 
 using Jint.Parser;
 using Jint.Parser.Ast;
+using Newtonsoft.Json.Linq;
 
 using ManagerBBCC.Main.Classes;
-using Newtonsoft.Json.Linq;
 
 namespace ManagerBBCC.Main
 {
@@ -23,6 +23,11 @@ namespace ManagerBBCC.Main
         public static void SetStatus(string message)
         {
             Core.MainWindow.StatusBlock.Text = message;
+        }
+
+        public static void InitializeVariables()
+        {
+            Core.LastEntry = null;
         }
 
         public static bool CheckSetting()
@@ -44,9 +49,11 @@ namespace ManagerBBCC.Main
             return true;
         }
 
-        public static bool CheckEntries()
+        public static bool CheckEntries(bool resetFlag)
         {
             if (!Core.IsBBCCFolderValid) return false;
+
+            if (resetFlag) Core.Meta.Reset();
 
             bool output = false;
             if (Core.ImportA(Core.ImageFolderPath)) output = true;
@@ -61,8 +68,8 @@ namespace ManagerBBCC.Main
             if (!Core.IsBBCCFolderValid) return false;
 
             bool output = false;
-            if (Core.ExportB(Path.Combine(Core.DataFolderPath, Config.JavaScriptFileName), false)) output = true;
-            if (Core.ExportC(Path.Combine(Core.DataFolderPath, Config.JsonFileName), false)) output = true;
+            if (Core.ExportB(Path.Combine(Core.DataFolderPath, Config.JavaScriptFileName), true)) output = true;
+            if (Core.ExportC(Path.Combine(Core.DataFolderPath, Config.JsonFileName), true)) output = true;
 
             return output;
         }
@@ -227,6 +234,29 @@ namespace ManagerBBCC.Main
             return true;
         }
 
+        public static bool ImportD(string imagePath)
+        {
+            Entry tokenEntry = new Entry()
+            {
+                Name = Path.GetFileName(imagePath),
+                LocalPath = imagePath
+            };
+
+            Entry overlappedEntry = Core.Meta.Entries.ToList().Find(x => x.Name == tokenEntry.Name);
+            if (overlappedEntry == null)
+            {
+                tokenEntry.ID = Core.PushID();
+                Core.Meta.Entries.Add(tokenEntry);
+            }
+            else
+            {
+                // Do nothing
+                return false;
+            }
+
+            return true;
+        }
+
         //public static bool ExportA(string folderPath, bool validOnly)
         //{
         //    // Can not save images from data
@@ -256,10 +286,9 @@ namespace ManagerBBCC.Main
         }
 
 
-        public static void CheckTagPoolFromEntry()
+        public static void UpdateMeta()
         {
-            Core.Meta.CheckPoolCount();
-            Core.MainWindow.TagPoolCount = Core.Meta.TagPool.Count;
+            Core.Meta.CheckTagPool();
             
         }
 
@@ -268,9 +297,14 @@ namespace ManagerBBCC.Main
             Core.DisplayEntries();
             Core.DisplayTags();
 
-            Core.MainWindow.BBCCRootBox.Text = Core.Setting.BBCCPath ?? "";
+            Core.MainWindow.BBCCRootBox.Text = Core.Setting.BbccPath ?? "";
+            Core.MainWindow.OpenBBCCRootButton.IsEnabled = Core.IsBBCCFolderValid;
+
+
             //Core.MainWindow.RefreshEntryButton.IsEnabled = Core.IsDataFolderValid;
             //Core.MainWindow.OpenBBCCRootButton.IsEnabled = Core.IsDataFolderValid;
+
+
         }
 
         public static void DisplayEntries()
@@ -286,6 +320,10 @@ namespace ManagerBBCC.Main
         {
             Core.MainWindow.TagListView.ItemsSource = null;
             Core.MainWindow.TagListView.ItemsSource = Core.Meta.TagPool;
+
+            Core.MainWindow.TagPoolCount = Core.Meta.TagPool.Count;
         }
+
+        public static int PushID() => Core.Meta.NextID++;
     }
 }
