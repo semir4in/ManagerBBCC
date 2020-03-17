@@ -54,7 +54,7 @@
                 </MenuItem.Header>
             </MenuItem>
 
-            <MenuItem Click="RemoveEntryMenuItem_Click">
+            <MenuItem Click="DeleteEntryMenuItem_Click">
                 <MenuItem.Icon>
                     <iconPacks:PackIconFontAwesome Kind="TrashAltSolid" Height="18" Width="18" Margin="10,4,2,4"/>
                 </MenuItem.Icon>
