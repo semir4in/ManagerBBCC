@@ -92,23 +92,29 @@ namespace ManagerBBCC.Main.Controls
             Core.EditorWindow.Popup();
         }
 
-        private void RemoveEntryMenuItem_Click(object sender, RoutedEventArgs e)
+        private void DeleteEntryMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (Core.IsShiftKeyDown)
             {
-                Core.Meta.Entries.RemoveAll(x => x.ID == this.Entry.ID);
-                Core.Meta.Filtered.RemoveAll(x => x.ID == this.Entry.ID);
-
-                if (File.Exists(this.Entry.LocalPath))
+                foreach (var tokenEntry in Core.SelectedEntries)
                 {
-                    File.Delete(this.Entry.LocalPath);
+                    Core.Meta.Entries.RemoveAll(x => x.ID == tokenEntry.ID);
+                    Core.Meta.Filtered.RemoveAll(x => x.ID == tokenEntry.ID);
+
+                    if (File.Exists(tokenEntry.LocalPath))
+                    {
+                        File.Delete(tokenEntry.LocalPath);
+                    }
                 }
 
+                Core.UpdateMeta();
+                
+                Core.DisplayTags();
                 Core.DisplayEntries();
             }
             else
             {
-                Core.SetStatus($"[{this.Entry.Name} 제거 - 실패] 제거메뉴를 '시프트+클릭'해 주세요");
+                Core.SetStatus($"[제거 - 실패] 제거메뉴를 '시프트+클릭'해 주세요");
                 Core.BeepSound();
             }
         }
